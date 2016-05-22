@@ -72,8 +72,26 @@ public class MainActivity extends AppCompatActivity /*implements RecyclerView.On
         Author a = new Author();
         a.setAuthor("Albert");
 
+        Author a_02 = new Author();
+        a_02.setAuthor("Alfredo");
+
+        Author a_03 = new Author();
+        a_03.setAuthor("Ana Maria");
+
+        Author a_04 = new Author();
+        a_04.setAuthor("Alfajó");
+
         Author a1 = new Author();
         a1.setAuthor("Bruna");
+
+        Author a1_01 = new Author();
+        a1_01.setAuthor("Bruno");
+
+        Author a1_02 = new Author();
+        a1_02.setAuthor("Breno");
+
+        Author a1_03 = new Author();
+        a1_03.setAuthor("Bárbara");
 
         Author a2 = new Author();
         a2.setAuthor("Clarice");
@@ -97,7 +115,13 @@ public class MainActivity extends AppCompatActivity /*implements RecyclerView.On
         a8.setAuthor("Rafael");
 
         listAuthor.add(a);
+        listAuthor.add(a_02);
+        listAuthor.add(a_03);
+        listAuthor.add(a_04);
         listAuthor.add(a1);
+        listAuthor.add(a1_01);
+        listAuthor.add(a1_02);
+        listAuthor.add(a1_03);
         listAuthor.add(a2);
         listAuthor.add(a3);
         listAuthor.add(a4);

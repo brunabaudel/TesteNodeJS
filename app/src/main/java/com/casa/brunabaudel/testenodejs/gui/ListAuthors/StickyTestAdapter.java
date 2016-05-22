@@ -17,7 +17,6 @@
 package com.casa.brunabaudel.testenodejs.gui.ListAuthors;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
@@ -28,11 +27,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import com.casa.brunabaudel.testenodejs.ItemStickHeader;
 import com.casa.brunabaudel.testenodejs.R;
 import com.casa.brunabaudel.testenodejs.model.Author;
-import com.casa.brunabaudel.testenodejs.model.LetterHeader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderAdapter;
@@ -40,65 +40,32 @@ import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderAdapter;
 public class StickyTestAdapter extends RecyclerView.Adapter<StickyTestAdapter.ViewHolder> implements
         StickyHeaderAdapter<StickyTestAdapter.HeaderHolder> {
 
-    private int SIZE_LETTER = 26;
     private Context mContext;
     private LayoutInflater mInflater;
     private List<Author> mListAuthor;
-    private LetterHeader[] mListLetter;
+    private List<ItemStickHeader<Character, Author>> mItems;
+    private HashMap<Character, Character> mapCharacters;
 
     public StickyTestAdapter(Context context, List<Author> listAuthor) {
         mInflater = LayoutInflater.from(context);
         mListAuthor = listAuthor;
         mContext = context;
-        mListLetter = new LetterHeader[SIZE_LETTER];
+        mapCharacters = new HashMap<>();
 
-        createListLetter();
-
+        createItems();
     }
 
-    private void createListLetter() {
-        String letter = "";
-        String[] aLetter = mContext.getResources().getStringArray(R.array.letters);
-        int count = 0;
-        int countLetter = 0;
-
-        mListLetter[0] = new LetterHeader(aLetter[0], 0);
-
-        for (int i = 1; i < mListLetter.length; i++) {
-            mListLetter[i] = new LetterHeader(aLetter[i], i);
-            //Log.d("DEBUG", mListLetter[i].getLetter() +" "+ mListLetter[i].getPosition() + " " + i);
-        }
-
-        for (int i = 1; i < aLetter.length; i++) {
-            count = 0;
-
-            for (Author author: mListAuthor) {
-                letter = author.getAuthor().toUpperCase().charAt(0)+"";
-                count++;
-               // Log.d("DEBUG", " " + countLetter);
-
-                if(aLetter[i].equals(letter)){
-                    countLetter++;
-                    //mListLetter[countLetter] = new LetterHeader(letter, count);
-                    mListLetter[countLetter].setLetter(letter);
-                    mListLetter[countLetter].setPosition(count);
-                    Log.d("DEBUG", mListLetter[countLetter].getLetter() +" "+ mListLetter[countLetter].getPosition() + " " + countLetter);
-                    break;
-                } /*else if (count > 0 && !letter.equals(aLetter[i])) {
-                    break;
-                }*/
+    private void createItems(){
+        mItems = new ArrayList<>();
+        char firstLetter;
+        for (Author author : mListAuthor) {
+            firstLetter = author.getAuthor().toUpperCase().charAt(0);
+            if(!mapCharacters.containsKey(firstLetter)){
+                mapCharacters.put(firstLetter, firstLetter);
             }
-
+            ItemStickHeader<Character, Author> item = new ItemStickHeader<>(mapCharacters.get(firstLetter), author);
+            mItems.add(item);
         }
-
-        //Log.d("DEBUG", mListLetter[0].getLetter() +" "+ mListLetter[0].getPosition());
-        //Log.d("DEBUG", mListLetter[1].getLetter() +" "+ mListLetter[1].getPosition());
-/*
-        for (int i = 0; i < mListLetter.length-1 ; i++) {
-            Log.d("DEBUG", mListLetter[i].getLetter() +" "+ mListLetter[i].getPosition());
-        }
-*/
-
     }
 
     @Override
@@ -110,18 +77,18 @@ public class StickyTestAdapter extends RecyclerView.Adapter<StickyTestAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        viewHolder.item.setText(mListAuthor.get(i).getAuthor());
+        viewHolder.item.setText(mItems.get(i).getItem().getAuthor());
     }
 
     @Override
     public int getItemCount() {
-        return mListAuthor.size();
+        return mItems.size();
     }
 
     @Override
     public long getHeaderId(int position) {
         Log.d("DEBUG", position+"");
-        return (long) mListLetter[position].getPosition();
+        return (long) mItems.get(position).getHeader().charValue();
     }
 
     @Override
@@ -135,7 +102,7 @@ public class StickyTestAdapter extends RecyclerView.Adapter<StickyTestAdapter.Vi
         viewholder.header.setBackgroundResource(R.color.header);
         viewholder.header.setTextColor(Color.BLACK);
         viewholder.header.setTypeface(null, Typeface.BOLD);
-        String header = mListLetter[position].getLetter() + " " /* + getHeaderId(position)*/;
+        String header = mItems.get(position).getHeader().toString();
         viewholder.header.setText(header);
     }
 
